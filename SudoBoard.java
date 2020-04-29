@@ -1,0 +1,190 @@
+import java.awt.BasicStroke;
+import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+public class SudoBoard extends javax.swing.JPanel {
+
+    /**
+     * Creates new form display
+     */
+    private static final int DIM_WIDTH = 352;
+    private static final int DIM_HEIGHT = 352;
+    private static final int SQ_SIZE = 351 / 9;
+    private Cell[][] c = null;
+    private boolean pencilMarkings = true;
+
+    public void update(Cell[][] cs, boolean pm) {
+        c = cs;
+        this.pencilMarkings = pm;
+        this.repaint();
+
+    }
+
+    public boolean getPencilMarkings() {
+        return this.pencilMarkings;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(1));
+        g2.setColor(Color.LIGHT_GRAY);
+        for (int i = 0; i < 9; i += 1) {
+            for (int j = 0; j < 9; j += 1) {
+                if (c == null) {
+                    continue;
+                }
+                if (c[i][j].isValid()) {
+                    g2.fillRect(SQ_SIZE * i, SQ_SIZE * j, SQ_SIZE, SQ_SIZE);
+                }
+            }
+        }
+        g2.setColor(Color.BLACK);
+        for (int i = 0; i < 10; i += 1) {
+
+            g2.drawLine(0, i * SQ_SIZE, DIM_WIDTH, i * SQ_SIZE);
+        }
+        for (int i = 0; i < 10; i += 1) {
+
+            g2.drawLine(i * SQ_SIZE, 0, i * SQ_SIZE, DIM_HEIGHT);
+        }
+        g2.setStroke(new BasicStroke(3));
+        for (int i = 0; i < 10; i += 3) {
+
+            g2.drawLine(0, i * SQ_SIZE, DIM_WIDTH, i * SQ_SIZE);
+        }
+        for (int i = 0; i < 10; i += 3) {
+
+            g2.drawLine(i * SQ_SIZE, 0, i * SQ_SIZE, DIM_HEIGHT);
+        }
+        if (c != null) {
+            int k = 0;
+
+            g2.setFont(new Font("TimesRoman", Font.PLAIN, 39));
+            for (int i = 0; i < 9; i += 1) {
+                for (int j = 0; j < 9; j += 1) {
+
+                    if (c[i][j].getValue() == 0) {
+                        k++;
+                        continue;
+                    }
+
+                    if (!c[i][j].getGiven()) {
+                        g2.setColor(Color.RED);
+                        g2.setFont(new Font("TimesRoman", Font.ITALIC, 39));
+                    }
+                    g2.drawString(c[i][j].getValue() + "", (i * SQ_SIZE) + 10, j * SQ_SIZE + 35);
+                    g2.setColor(Color.black);
+                    g2.setFont(new Font("TimesRoman", Font.PLAIN, 39));
+
+                }
+
+            }
+            if (!this.pencilMarkings) {
+                return;
+            }
+            g2.setFont(new Font("TimesRoman", Font.BOLD, 10));
+            g2.setColor(Color.BLUE);
+            for (int i = 0; i < 9; i += 1) {
+                for (int j = 0; j < 9; j += 1) {
+                    if (c[i][j].getValue() == 0) {
+                        int x = (i * SQ_SIZE) + 5;
+                        int y = j * SQ_SIZE + 11;
+                        int xdis = 12;
+                        int ydis = 8;
+                        boolean[] b = c[i][j].getPencilMarking();
+                        if (b[1]) {
+                            g2.drawString(1 + "", x, y + ydis * 3);
+                        }
+                        if (b[2]) {
+                            g2.drawString(2 + "", x + xdis * 1, y + ydis * 3);
+                        }
+                        if (b[3]) {
+                            g2.drawString(3 + "", x + xdis * 2, y + ydis * 3);
+                        }
+                        if (b[4]) {
+                            g2.drawString(4 + "", x, y + 12);
+                        }
+                        if (b[5]) {
+                            g2.drawString(5 + "", x + xdis * 1, y + 12);
+                        }
+                        if (b[6]) {
+                            g2.drawString(6 + "", x + xdis * 2, y + 12);
+                        }
+                        if (b[7]) {
+                            g2.drawString(7 + "", x, y);
+                        }
+                        if (b[8]) {
+                            g2.drawString(8 + "", x + xdis * 1, y);
+                        }
+                        if (b[9]) {
+                            g2.drawString(9 + "", x + xdis * 2, y);
+                        }
+
+                    }
+                }
+            }
+
+        }
+    }
+
+    public SudoBoard() {
+        this.setSize(DIM_WIDTH, DIM_HEIGHT);
+        this.setMinimumSize(new Dimension(DIM_WIDTH, DIM_HEIGHT));
+        this.setPreferredSize(new Dimension(DIM_WIDTH, DIM_HEIGHT));
+        initComponents();
+
+    }
+
+    public Dimension getPreferredSize() {
+        return new Dimension(DIM_WIDTH, DIM_HEIGHT);
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    public static void createAndShowGui() {
+        JFrame frame = new JFrame();
+        frame.add(new SudoBoard());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationByPlatform(true);
+        frame.pack();
+        frame.setVisible(true);
+
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGui();
+            }
+        });
+    }
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // End of variables declaration//GEN-END:variables
+}
